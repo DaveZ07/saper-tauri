@@ -1,0 +1,3 @@
+moja-aplikacja-tauri@1.0.0 D:\projekty\tauri\moja-aplikacja-tauri
+└── @tauri-apps/cli@2.6.2
+

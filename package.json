@@ -1,0 +1,24 @@
+{
+  "name": "moja-aplikacja-tauri",
+  "version": "1.0.0",
+  "description": "Gra Saper zbudowana w Tauri w celach szkoleniowych.",
+  "main": "src-frontend/main.js",
+  "scripts": {
+    "tauri": "tauri",
+    "tauri:dev": "tauri dev",
+    "tauri:build": "tauri build",
+    "start": "tauri dev",
+    "build": "tauri build"
+  },
+  "keywords": [
+    "tauri",
+    "rust",
+    "frontend",
+    "application"
+  ],
+  "author": "Twoje Imię",
+  "license": "MIT",
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.6.2"
+  }
+}

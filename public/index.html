@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <title>Saper - Tauri App</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+</head>
+<body>
+    <div class="container">
+        <h1>Saper</h1>
+        <div class="game-info">
+            <div class="info-item">
+                <span>Miny: </span>
+                <span id="mines-count">10</span>
+            </div>
+            <div class="info-item">
+                <span>Czas: </span>
+                <span id="timer">0</span>
+            </div>
+            <button id="new-game">Nowa Gra</button>
+        </div>
+        <div id="game-board"></div>
+        <div class="difficulty">
+            <button class="difficulty-btn" data-level="easy">Łatwy (9x9, 10 min)</button>
+            <button class="difficulty-btn" data-level="medium">Średni (16x16, 40 min)</button>
+            <button class="difficulty-btn" data-level="hard">Trudny (30x16, 99 min)</button>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
