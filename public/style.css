@@ -82,7 +82,7 @@ h1 {
     border-radius: 12px;
     padding: 12px;
     box-shadow: 0 10px 30px rgba(230, 126, 34, 0.4);
-
+    max-width: 100%;
     max-height: calc(100vh - 300px);
     overflow: auto;
 }
@@ -146,6 +146,7 @@ h1 {
     display: flex;
     height: 40px;
     gap: 2px;
+    max-width: 100%;
 }
 
 .difficulty {
@@ -285,10 +286,12 @@ h1 {
         align-items: center;
         overflow-x: auto;
         padding: 10px;
+        max-width: 100%;
     }
     
     .row {
         height: 44px;
+        max-width: 100%;
     }
     
     .difficulty {
@@ -339,6 +342,7 @@ h1 {
     
     .row {
         height: 39px;
+        max-width: 100%;
     }
     
     .difficulty-btn {
@@ -372,6 +376,7 @@ h1 {
     
     .row {
         height: 35px;
+        max-width: 100%;
     }
     
     h1 {

@@ -5,36 +5,58 @@ Zestaw skryptów do automatycznego budowania i deployowania aplikacji Saper na X
 ## 📁 Dostępne skrypty
 
 ### 🔨 `build-and-deploy.sh` - GŁÓWNY SKRYPT
-**Kompletny proces budowania i deployowania**
+**Kompletny proces budowania i deployowania z wyborem trybu**
 ```bash
 bash build-and-deploy.sh
 ```
 
 **Co robi:**
+- 🎯 **NOWE: Wybór trybu budowania (release/debug)**
 - ✅ Konfiguruje środowisko Android/Java
-- ✅ Buduje aplikację w trybie release
+- ✅ Buduje aplikację w wybranym trybie
 - ✅ Generuje keystore (pierwszym razem)
 - ✅ Podpisuje APK dla Xiaomi
 - ✅ Weryfikuje podpis
+- ✅ **NOWE: Automatyczna aktualizacja portu ADB**
 - ✅ Opcjonalnie instaluje na telefonie
+
+**Różnice między trybami:**
+- **Release**: ~38MB, zoptymalizowany, wolniejszy build
+- **Debug**: ~558MB, szybszy build, informacje debug
 
 ---
 
 ### ⚡ `quick-deploy.sh` - SZYBKI DEPLOYMENT
-**Gdy APK już jest zbudowany**
+**Gdy APK już jest zbudowany - automatyczne wykrywanie typu**
 ```bash
 bash quick-deploy.sh
 ```
 
 **Co robi:**
+- 🎯 **NOWE: Automatyczne wykrywanie dostępnych APK (release/debug)**
+- ✅ **NOWE: Automatyczna aktualizacja portu ADB**
 - ✅ Łączy się z Xiaomi 12
-- ✅ Instaluje istniejący APK
+- ✅ Instaluje najlepszy dostępny APK
 - ✅ Opcjonalnie uruchamia aplikację
 
 ---
 
+### � `switch-apk.sh` - PRZEŁĄCZNIK APK
+**NOWY: Wybór domyślnego APK**
+```bash
+bash switch-apk.sh
+```
+
+**Co robi:**
+- �📱 Pokazuje dostępne APK (release/debug) i ich rozmiary
+- 🔄 Pozwala wybrać który APK ma być domyślny
+- 🔗 Tworzy symlink saper-xiaomi-compatible.apk
+- ⚡ Umożliwia szybkie przełączanie między wersjami
+
+---
+
 ### 📱 `manage-app.sh` - ZARZĄDZANIE APLIKACJĄ
-**Zarządzanie zainstalowaną aplikacją**
+**Zarządzanie zainstalowaną aplikacją z automatyczną aktualizacją portu**
 ```bash
 bash manage-app.sh
 ```
@@ -82,10 +104,99 @@ source setup-android-env.sh  # Ustawia environment globalnie
 bash build-and-deploy.sh
 ```
 
-### 4. Kolejne deploymenty (gdy już masz APK):
+---
+
+## 🚀 Workflow - Najlepsze praktyki
+
+### 🎯 **NOWY: Wybór trybu budowania**
+
+#### Dla rozwoju (szybsze iteracje):
 ```bash
+bash build-and-deploy.sh
+# Wybierz: 2) DEBUG
+# - Szybszy build (~2-3 min vs 5-8 min)
+# - Większy rozmiar (~558MB)
+# - Debug informacje
+```
+
+#### Dla produkcji/testów:
+```bash
+bash build-and-deploy.sh  
+# Wybierz: 1) RELEASE
+# - Wolniejszy build (5-8 min)
+# - Mały rozmiar (~38MB)
+# - Zoptymalizowany kod
+```
+
+### 🔄 **NOWY: Przełączanie między wersjami**
+
+```bash
+# Zbuduj oba typy
+bash build-and-deploy.sh  # release
+bash build-and-deploy.sh  # debug
+
+# Przełączaj między nimi:
+bash switch-apk.sh
+# Wybierz który ma być domyślny
+
+# Szybko deployuj wybrany:
 bash quick-deploy.sh
 ```
+
+### ⚡ **Typowy workflow**
+
+1. **Pierwsze użycie:**
+   ```bash
+   bash build-and-deploy.sh  # Wybierz tryb i zainstaluj
+   ```
+
+2. **Szybkie iteracje (bez rebuildu):**
+   ```bash
+   bash quick-deploy.sh  # Używa ostatnio zbudowanego APK
+   ```
+
+3. **Zmiana trybu:**
+   ```bash
+   bash switch-apk.sh  # Przełącz release <-> debug
+   bash quick-deploy.sh
+   ```
+
+4. **Zarządzanie aplikacją:**
+   ```bash
+   bash manage-app.sh  # Uninstall, logs, restart itp.
+   ```
+
+### 📁 **Generowane pliki:**
+```
+saper-xiaomi-compatible-release.apk  # Release (~38MB)
+saper-xiaomi-compatible-debug.apk    # Debug (~558MB)  
+saper-xiaomi-compatible.apk          # Symlink do wybranego
+saper-xiaomi.keystore                # Keystore (zachowaj!)
+```
+
+---
+
+## 🔧 Automatyczne funkcje
+
+### 🔌 **NOWE: Automatyczna aktualizacja portu ADB**
+Wszystkie skrypty automatycznie:
+- 🔍 Wykrywają najnowszy port ADB urządzenia
+- 🔄 Aktualizują port we wszystkich skryptach
+- 📝 Synchronizują ustawienia między skryptami
+
+**Działa w:**
+- `build-and-deploy.sh` - podczas instalacji
+- `quick-deploy.sh` - podczas szybkiego deployu  
+- `manage-app.sh` - podczas każdego połączenia
+
+**Nie musisz ręcznie edytować IP/portu!**
+
+### 🎯 **Automatyczna konfiguracja środowiska**
+Każdy skrypt automatycznie ustawia:
+- `ANDROID_HOME` → Android SDK
+- `JAVA_HOME` → Java JDK 17  
+- `NDK_HOME` → Android NDK
+- `PATH` → Narzędzia Android
 
 ---
 

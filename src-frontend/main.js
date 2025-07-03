@@ -2,8 +2,8 @@ class Saper {
     constructor() {
         this.difficulties = {
             easy: { rows: 9, cols: 9, mines: 10 },
-            medium: { rows: 16, cols: 16, mines: 40 },
-            hard: { rows: 16, cols: 30, mines: 99 }
+            medium: { rows: 9, cols: 16, mines: 30 },
+            hard: { rows: 9, cols: 30, mines: 60 }
         };
         
         this.currentDifficulty = 'easy';
