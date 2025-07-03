@@ -4,7 +4,7 @@ class Saper {
         this.difficulties = {
             easy: { rows: 9, cols: 9, mines: 10 },
             medium: { rows: 16, cols: 16, mines: 40 },
-            hard: { rows: 16, cols: 30, mines: 99 }
+            hard: { rows: 30, cols: 16, mines: 99 }
         };
         
         this.currentDifficulty = 'easy';
@@ -30,6 +30,54 @@ class Saper {
         this.init();
     }
     
+    showModal(icon, title, message) {
+        const modal = document.getElementById('game-modal');
+        const modalIcon = modal.querySelector('.modal-icon');
+        const modalTitle = modal.querySelector('.modal-title');
+        const modalMessage = modal.querySelector('.modal-message');
+        const modalBtn = modal.querySelector('#modal-ok');
+        
+        modalIcon.textContent = icon;
+        modalTitle.textContent = title;
+        modalMessage.textContent = message;
+        
+        modal.style.display = 'flex';
+        
+        // Obsługa zamknięcia modala
+        const closeModal = () => {
+            modal.style.display = 'none';
+            modalBtn.removeEventListener('click', closeModal);
+            modal.removeEventListener('click', overlayClose);
+        };
+        
+        const overlayClose = (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        };
+        
+        modalBtn.addEventListener('click', closeModal);
+        modal.addEventListener('click', overlayClose);
+    }
+    
+    getCellSize() {
+        const screenWidth = window.innerWidth;
+        const screenHeight = window.innerHeight;
+        const config = this.difficulties[this.currentDifficulty];
+        
+        // Oblicz maksymalny rozmiar komórki jaki się zmieści
+        const maxWidth = Math.floor((screenWidth - 100) / config.cols);
+        const maxHeight = Math.floor((screenHeight - 300) / config.rows);
+        
+        let cellSize = Math.min(maxWidth, maxHeight);
+        
+        // Minimalne i maksymalne rozmiary
+        cellSize = Math.max(cellSize, 25); // minimum 25px
+        cellSize = Math.min(cellSize, 50); // maksimum 50px
+        
+        return cellSize;
+    }
+    
     init() {
         this.setupEventListeners();
         this.createBoard();
@@ -47,8 +95,41 @@ class Saper {
             });
         });
         
+        // Obsługa zmiany rozmiaru okna i orientacji
+        window.addEventListener('resize', () => {
+            this.adjustBoardSize();
+        });
+        
+        window.addEventListener('orientationchange', () => {
+            setTimeout(() => {
+                this.adjustBoardSize();
+            }, 100);
+        });
+        
         // Oznacz pierwszy poziom jako aktywny
         document.querySelector('.difficulty-btn[data-level="easy"]').classList.add('active');
+    }
+    
+    adjustBoardSize() {
+        if (this.gameBoard && this.board.length > 0) {
+            const config = this.difficulties[this.currentDifficulty];
+            const cellSize = this.getCellSize();
+//            this.gameBoard.style.width = `${config.cols * cellSize}px`;
+            
+            // Odśwież rozmiary wszystkich komórek
+            const cells = this.gameBoard.querySelectorAll('.cell');
+            cells.forEach(cell => {
+                cell.style.width = `${cellSize - 2}px`;
+                cell.style.height = `${cellSize - 2}px`;
+                cell.style.lineHeight = `${cellSize - 6}px`;
+            });
+            
+            // Odśwież wysokości wierszy
+            const rows = this.gameBoard.querySelectorAll('.row');
+            rows.forEach(row => {
+                row.style.height = `${cellSize}px`;
+            });
+        }
     }
     
     createBoard() {
@@ -57,7 +138,10 @@ class Saper {
         console.log('Konfiguracja:', config);
         this.board = [];
         this.gameBoard.innerHTML = '';
-        this.gameBoard.style.width = `${config.cols * 30}px`;
+        
+        // Dynamicznie ustaw szerokość planszy na podstawie rozmiaru ekranu
+        const cellSize = this.getCellSize();
+        //this.gameBoard.style.width = `${config.cols * cellSize}px`;
         
         console.log('Tworzenie planszy...');
         
@@ -66,12 +150,19 @@ class Saper {
             this.board[row] = [];
             const rowDiv = document.createElement('div');
             rowDiv.className = 'row';
+            rowDiv.style.height = `${cellSize}px`;
             
             for (let col = 0; col < config.cols; col++) {
                 const cell = document.createElement('div');
                 cell.className = 'cell';
                 cell.dataset.row = row;
                 cell.dataset.col = col;
+                
+                // Ustaw rozmiary komórki bezpośrednio w stylu
+                const actualCellSize = cellSize - 2; // odejmij margin/border
+                cell.style.width = `${actualCellSize}px`;
+                cell.style.height = `${actualCellSize}px`;
+                cell.style.lineHeight = `${actualCellSize - 4}px`;
                 
                 cell.addEventListener('click', (e) => this.handleCellClick(e));
                 cell.addEventListener('contextmenu', (e) => this.handleRightClick(e));
@@ -240,7 +331,7 @@ class Saper {
         }
         
         setTimeout(() => {
-            alert('Gra skończona! Natrafiłeś na minę!');
+            this.showModal('💣', 'Gra zakończona!', 'Ups! Natrafiłeś na minę. Spróbuj ponownie!');
         }, 100);
     }
     
@@ -266,7 +357,8 @@ class Saper {
         clearInterval(this.timerInterval);
         
         setTimeout(() => {
-            alert('Gratulacje! Wygrałeś!');
+            const elapsed = Math.floor((Date.now() - this.startTime) / 1000);
+            this.showModal('🏆', 'Gratulacje!', `Wygrałeś! Twój czas: ${elapsed} sekund`);
         }, 100);
     }
     

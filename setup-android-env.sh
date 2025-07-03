@@ -10,10 +10,10 @@ export ANDROID_SDK_ROOT="/c/Users/dawid/AppData/Local/Android/Sdk"
 export NDK_HOME="/c/Users/dawid/AppData/Local/Android/Sdk/ndk/29.0.13599879"
 
 # Dodanie narzędzi Android do PATH
-export PATH="$PATH:$ANDROID_HOME/platform-tools:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin"
+export PATH="$HOME/.cargo/bin:$PATH:$ANDROID_HOME/platform-tools:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin"
 
-# Java (już skonfigurowane)
-export JAVA_HOME="/c/Program Files/Amazon Corretto/jdk21.0.2_13"
+# Java (poprawna ścieżka do JDK 17)
+export JAVA_HOME="/c/Program Files/Java/jdk-17"
 
 echo "✅ Zmienne środowiskowe ustawione:"
 echo "   ANDROID_HOME: $ANDROID_HOME"
